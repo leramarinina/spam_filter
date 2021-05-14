@@ -5,6 +5,7 @@ import nltk
 import pymorphy2
 import json
 
+
 def punct_triggers(message):
     exclamation_marks = 0
     punctuation_marks = 0
@@ -20,8 +21,9 @@ def punct_triggers(message):
     else:
         return 1
 
-
-def bayes_spam(the_list): # собственно наивный байесовский классификатор
+    
+# собственно наивный байесовский классификатор
+def bayes_spam(the_list): 
     result = 0
     for word in the_list:
         nik = 0
@@ -41,6 +43,7 @@ def bayes_not_spam(the_list):
         not_spam_probability = (a + nik) / (a * not_spam_m + not_spam_nk)
         result += math.log10(not_spam_probability)
     return result
+
 
 def addressing(text): #наличие обращения по имени в начале
     prob_thresh = 0.4
@@ -73,6 +76,7 @@ def greeting(message): #наличие приветствия в начале
     else:
         return 1
 
+    
 def spam(message):
     punct = punct_triggers(message)
     for elem in string.punctuation:  # очистить текст письма от пунктуации
@@ -90,6 +94,7 @@ def spam(message):
         res = 'это не спам'
     return res
 
+
 with open('spam_triggers.json', encoding='utf-8') as f:
     spam_triggers = json.load(f)
 
@@ -104,6 +109,7 @@ spam_nk = 30546
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def hello():
     return render_template('index.html')
@@ -116,6 +122,7 @@ def process():
         res = spam(message)
         return render_template('result.html', result=res)
     return 'Hmmm'
+
 
 if __name__ == '__main__':
     app.run(debug=True)
